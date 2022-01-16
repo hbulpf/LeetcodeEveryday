@@ -23,7 +23,8 @@ class Node:
 class Solution:
     def connect(self, root: 'Optional[Node]') -> 'Optional[Node]':
         """
-        BFS: 遍历时记录每一层节点的个数
+        BFS: 遍历时记录每一层节点的个数。
+        BFS遍历时，出队不一定只是出一次！！！
         """
         if not root:
             return root
