@@ -3,6 +3,8 @@
 
 """
 617. 合并二叉树
+1. DFS递归
+2. BFS
 @Time : 2022/1/16 20:20
 @Author: RunAtWorld
 @File: 0617_L_mergeTrees.py
@@ -26,10 +28,44 @@ class Solution:
         if not root2:
             return root1
 
+        merged = TreeNode(root1.val + root2.val)
+        que = collections.deque([merged])
+        que1 = collections.deque([root1])
+        que2 = collections.deque([root2])
+        while que1 and que2:
+            r = que.popleft()
+            r1 = que1.popleft()
+            r2 = que2.popleft()
+
+            if r1.left and r2.left:
+                r.left = TreeNode(r1.left.val + r2.left.val)
+                que.append(r.left)
+                que1.append(r1.left)
+                que2.append(r2.left)
+            elif r1.left:
+                # 这里有个关键，此时后面已经不再需要遍历 r.left
+                r.left = r1.left
+            elif r2.left:
+                r.left = r2.left
+
+            if r1.right and r2.right:
+                r.right = TreeNode(r1.right.val + r2.right.val)
+                que.append(r.right)
+                que1.append(r1.right)
+                que2.append(r2.right)
+            elif r1.right:
+                # 这里有个关键，此时后面已经不再需要遍历 r.left
+                r.right = r1.right
+            elif r2.right:
+                r.right = r2.right
+
+        return merged
 
     def mergeTrees_Error(self, root1: TreeNode, root2: TreeNode) -> TreeNode:
         """
         BFS 错误
+        a. 思维卡在考虑怎么构造新的二叉树，想偏了。引以为戒！！！
+        偏在(关键): 两个要合并的节点中如果其中一个为空，则让新树的该节点等于另一个不为空的节点即可。不再需要遍历这个非空节点。
         """
         if not root1:
             return root2
@@ -71,6 +107,7 @@ class Solution:
         DFS 错误思路
         最开始的错误思路:
         a. 思维卡在考虑怎么构造新的二叉树，想偏了。
+        偏在: 两个要合并的节点中如果其中一个为空，则让新树的该节点等于另一个不为空的节点即可。不再需要遍历这个非空节点。
         b. 对递归的理解，还需提高！！！
         """
         root = TreeNode(0, None)
